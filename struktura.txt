@@ -1,0 +1,67 @@
+video-rental/
+│
+├── common/                      # współdzielone moduły
+│   ├── sql_db.py               # konfiguracja PostgreSQL + SQLAlchemy
+│   ├── settings.py             # wspólne zmienne środowiskowe
+│   └── utils.py                # helpery, np. generowanie QR
+│
+├── user_service/
+│   ├── main.py                 # FastAPI dla serwisu użytkowników
+│   ├── models.py               # SQLAlchemy: User
+│   ├── schemas.py              # Pydantic: UserCreate, UserRead...
+│   ├── crud.py                 # logika dostępu do bazy
+│   ├── routers/
+│   │   └── users.py            # endpointy REST
+│   └── __init__.py
+│
+├── movie_service/
+│   ├── main.py
+│   ├── models.py               # Movie, Genre, movie_genres
+│   ├── schemas.py
+│   ├── crud.py
+│   ├── routers/
+│   │   └── movies.py
+│   └── __init__.py
+│
+├── inventory_service/
+│   ├── main.py
+│   ├── models.py               # InventoryItem + statusy
+│   ├── schemas.py
+│   ├── crud.py
+│   ├── routers/
+│   │   └── inventory.py
+│   ├── qr/
+│   │   ├── generator.py        # generowanie kodów QR
+│   │   └── scanner_logic.py    # logika obsługi skanów
+│   └── __init__.py
+│
+├── rental_service/
+│   ├── main.py
+│   ├── models.py               # Rental + statusy wypożyczeń
+│   ├── schemas.py
+│   ├── crud.py
+│   ├── routers/
+│   │   └── rentals.py
+│   └── __init__.py
+│
+├── log_service/
+│   ├── main.py                 # (opcjonalne) endpoint do odczytu logów
+│   ├── db.py                   # konfiguracja MongoDB
+│   ├── qr_logs.py              # zapis logów skanów QR
+│   └── __init__.py
+│
+├── scripts/
+│   ├── create_all_tables.py    # generowanie tabel SQL
+│   └── seed_data.py            # dodawanie przykładowych danych
+│
+├── docker/                     # konteneryzacja mikroserwisów
+│   ├── user_service.Dockerfile
+│   ├── movie_service.Dockerfile
+│   ├── rental_service.Dockerfile
+│   ├── inventory_service.Dockerfile
+│   ├── mongo.Dockerfile
+│   └── postgres.Dockerfile
+│
+├── docker-compose.yml          # uruchamianie całej architektury
+├── README.md
+└── requirements.txt
