@@ -1,0 +1,16 @@
+version: '3.8'
+services:
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_PASSWORD: password
+  rabbitmq:
+    image: rabbitmq:3-management
+  rental_service:
+    build: .
+    command: uvicorn rental_service.main:app --host 0.0.0.0
+    depends_on: [db, rabbitmq]
+  crm_worker:
+    build: .
+    command: python -m crm_service.worker
+    depends_on: [db, rabbitmq]
