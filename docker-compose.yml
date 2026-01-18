@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: video_rental
+    ports:
+      - "5432:5432"
+
+  inventory-service:
+    build: .
+    command: python Services/main.py
+    environment:
+      - DATABASE_URL=postgresql://user:password@db:5432/video_rental
+      - RABBITMQ_URL=amqp://guest:guest@rabbitmq:5672/
+      - PYTHONPATH=/app
+    depends_on:
+      - db
+      - rabbitmq
+
+  crm-worker:
+    build: .
+    command: python Services/crmService/worker.py
+    environment:
+      - DATABASE_URL=postgresql://user:password@db:5432/video_rental
+      - RABBITMQ_URL=amqp://guest:guest@rabbitmq:5672/
+      - PYTHONPATH=/app
+    depends_on:
+      - db
+      - rabbitmq
